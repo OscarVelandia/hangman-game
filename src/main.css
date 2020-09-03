@@ -51,6 +51,23 @@ button:disabled {
   background-color: #e0e4cc;
 }
 
-.container {
-  width: 60%;
+.game-wrapper {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.failures-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+  border: 0.1rem solid #293c4b;
+}
+
+.hangman-image {
+  margin-left: 20%;
+}
+
+.is-hide {
+  visibility: hidden;
 }

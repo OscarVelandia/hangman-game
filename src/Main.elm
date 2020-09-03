@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, img, span, text)
-import Html.Attributes exposing (src)
+import Html.Attributes exposing (class, classList, src)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode exposing (Decoder, field, map2, string)
@@ -138,6 +138,17 @@ view model =
             div [] [ text "Error" ]
 
 
+keyboard : Html Msg
+keyboard =
+    alphabet
+        |> String.split ""
+        |> List.map
+            (\char ->
+                button [ onClick <| Guess char ] [ text char ]
+            )
+        |> div []
+
+
 viewGameState : GameState -> Html Msg
 viewGameState { character, guesses } =
     let
@@ -172,24 +183,26 @@ viewGameState { character, guesses } =
                 |> Set.toList
                 |> List.filter (\char -> not <| Set.member char characterNameSet)
                 |> List.map (\char -> span [] [ text char ])
-                |> div []
+                |> div [ class "failures-wrapper" ]
 
-        keyboard =
-            alphabet
-                |> String.split ""
-                |> List.map
-                    (\char ->
-                        button [ onClick <| Guess char ] [ text char ]
-                    )
-                |> div []
+        hangmanImage =
+            img
+                [ src <| "%PUBLIC_URL%/" ++ "hangman-" ++ String.fromInt (Set.size guesses) ++ ".png"
+                , class "hangman-image"
+                , classList [ ( "is-hide", Set.size guesses < 1 ) ]
+                ]
+                []
     in
-    div []
+    div [ class "game-wrapper" ]
         [ characterName
         , keyboard
         , failures
-        , button [ onClick Restart ] [ text "Restart" ]
-        , button [ onClick NewGame ] [ text "New game" ]
         , img [ src character.image ] []
+        , hangmanImage
+        , div []
+            [ button [ onClick Restart ] [ text "Restart" ]
+            , button [ onClick NewGame ] [ text "New game" ]
+            ]
         ]
 
 
